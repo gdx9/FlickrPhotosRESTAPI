@@ -1,18 +1,16 @@
 package manor9421.com.flickrphoto;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.view.Display;
-import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-
+import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,7 +24,9 @@ public class AsynchronousPicAdd extends AsyncTask<Void,Drawable,Void>{
     GridLayout g;
     int width;
 
-    public AsynchronousPicAdd(Resources r, Context c, GridLayout g,int width) {
+    public AsynchronousPicAdd() {}
+
+    public AsynchronousPicAdd(Resources r, Context c, GridLayout g, int width) {
         this.r = r;
         this.c = c;
         this.g = g;
@@ -43,8 +43,6 @@ public class AsynchronousPicAdd extends AsyncTask<Void,Drawable,Void>{
         FlickrFetchr flickrFetchr = new FlickrFetchr();
 
         List<GalleryItem> galleryItemList = flickrFetchr.fetchItems();// получили список с url картинок
-
-
 
         for(GalleryItem galleryItem: galleryItemList) {
             String url = galleryItem.getUrl();
@@ -75,7 +73,24 @@ public class AsynchronousPicAdd extends AsyncTask<Void,Drawable,Void>{
 
             g.addView(iv);
         }catch (Exception e){
-
+            e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+
+        try {
+            startServ();
+        }catch(Exception e) {
+            Toast.makeText(c, e+"", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void startServ() {
+        Intent intent = new Intent(c, PicCountMessageService.class);
+        intent.putExtra(PicCountMessageService.EXTRA_MESSAGE,g.getChildCount()+" pictures added");
+        c.startService(intent);
     }
 }
