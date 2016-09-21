@@ -33,9 +33,9 @@ public class PicCountMessageService extends IntentService {
 
     private void showText(final String text) {
         try {
-            Intent intent = new Intent(this, PhotoGalleryActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(PhotoGalleryActivity.class);
+            stackBuilder.addParentStack(MainActivity.class);
             stackBuilder.addNextIntent(intent);// при клике на уведомление будет отправлен интент
             PendingIntent pendingIntent =
                     stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
